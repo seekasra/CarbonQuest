@@ -1,3 +1,10 @@
+![Python](https://img.shields.io/badge/python-3.6+-blue.svg)
+![PyQt5](https://img.shields.io/badge/uses-PyQt5-green.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
+
+
 # CarbonQuest: Visualizing Great Britain's Electrical Carbon Footprint
 
 CarbonQuest is an advanced, PyQt5-based desktop application designed to interact directly with the Official Carbon Intensity API for Great Britain, developed by National Grid. This tool provides a real-time and historical perspective on the carbon intensity of electricity consumed within Great Britain, offering an educational insight into the environmental impact of energy usage. Users can access carbon intensity forecasts, actual intensity data, and factors for various fuel types, all visualized through engaging graphical representations. Learn more about carbon intensity at [carbonintensity.org.uk](https://carbonintensity.org.uk).
