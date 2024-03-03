@@ -78,8 +78,7 @@ class CarbonIntensityApp(QMainWindow):
             return None
 
     def display_response(self, data: dict):
-        display_str = json.dumps(data, sort_keys=True, indent=4)
-        self.response_text.setText(str(display_str))
+        self.response_text.setText(json.dumps(data, sort_keys=True, indent=4))
 
     def get_current_intensity(self):
         data = self.fetch_data("https://api.carbonintensity.org.uk/intensity")
