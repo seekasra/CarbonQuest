@@ -1,9 +1,21 @@
 import sys
 import requests
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTextEdit, QLineEdit, QLabel, QGridLayout, QMessageBox
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QPushButton,
+    QWidget,
+    QTextEdit,
+    QLineEdit,
+    QLabel,
+    QGridLayout,
+    QMessageBox,
+)
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import datetime
+import json
+
 
 class CarbonIntensityApp(QMainWindow):
     def __init__(self):
@@ -23,7 +35,11 @@ class CarbonIntensityApp(QMainWindow):
         self.current_intensity_btn.clicked.connect(self.get_current_intensity)
 
         self.today_intensity_btn = QPushButton("Get Today's Intensity")
-        self.today_intensity_btn.clicked.connect(lambda: self.get_intensity_for_date(datetime.datetime.now().strftime('%Y-%m-%d')))
+        self.today_intensity_btn.clicked.connect(
+            lambda: self.get_intensity_for_date(
+                datetime.datetime.now().strftime("%Y-%m-%d")
+            )
+        )
 
         self.intensity_factors_btn = QPushButton("Get Intensity Factors")
         self.intensity_factors_btn.clicked.connect(self.get_intensity_factors)
@@ -32,7 +48,9 @@ class CarbonIntensityApp(QMainWindow):
         self.date_input = QLineEdit()
 
         self.get_date_intensity_btn = QPushButton("Get Intensity for Date")
-        self.get_date_intensity_btn.clicked.connect(lambda: self.get_intensity_for_date(self.date_input.text()))
+        self.get_date_intensity_btn.clicked.connect(
+            lambda: self.get_intensity_for_date(self.date_input.text())
+        )
 
         self.response_text = QTextEdit()
         self.response_text.setReadOnly(True)
@@ -51,7 +69,7 @@ class CarbonIntensityApp(QMainWindow):
 
     def fetch_data(self, url):
         try:
-            headers = {'Accept': 'application/json'}
+            headers = {"Accept": "application/json"}
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json()
@@ -59,27 +77,31 @@ class CarbonIntensityApp(QMainWindow):
             QMessageBox.critical(self, "Error", str(e))
             return None
 
-    def display_response(self, data):
-        self.response_text.setText(str(data))
+    def display_response(self, data: dict):
+        self.response_text.setText(json.dumps(data, sort_keys=True, indent=4))
 
     def get_current_intensity(self):
-        data = self.fetch_data('https://api.carbonintensity.org.uk/intensity')
+        data = self.fetch_data("https://api.carbonintensity.org.uk/intensity")
         if data:
             self.display_response(data)
 
     def get_intensity_today(self):
-        self.get_intensity_for_date(datetime.datetime.now().strftime('%Y-%m-%d'))
+        self.get_intensity_for_date(datetime.datetime.now().strftime("%Y-%m-%d"))
 
     def get_intensity_factors(self):
-        data = self.fetch_data('https://api.carbonintensity.org.uk/intensity/factors')
+        data = self.fetch_data("https://api.carbonintensity.org.uk/intensity/factors")
         if data:
             self.display_response(data)
 
     def get_intensity_for_date(self, date):
         if not date:
-            QMessageBox.warning(self, "Invalid Date", "Please enter a valid date in YYYY-MM-DD format.")
+            QMessageBox.warning(
+                self, "Invalid Date", "Please enter a valid date in YYYY-MM-DD format."
+            )
             return
-        data = self.fetch_data(f'https://api.carbonintensity.org.uk/intensity/date/{date}')
+        data = self.fetch_data(
+            f"https://api.carbonintensity.org.uk/intensity/date/{date}"
+        )
         if data:
             self.plot_data(data)
 
@@ -88,19 +110,20 @@ class CarbonIntensityApp(QMainWindow):
         ax = self.figure.add_subplot(111)
         dates = []
         intensities = []
-        for item in data.get('data', []):
-            start = item.get('from')
-            intensity = item.get('intensity', {}).get('forecast')
+        for item in data.get("data", []):
+            start = item.get("from")
+            intensity = item.get("intensity", {}).get("forecast")
             if start and intensity is not None:
                 dates.append(start)
                 intensities.append(intensity)
 
-        ax.plot(dates, intensities, marker='o', linestyle='-')
-        ax.set_xlabel('Time')
-        ax.set_ylabel('Carbon Intensity (gCO2eq/kWh)')
-        ax.set_title('Carbon Intensity Forecast')
-        ax.tick_params(axis='x', rotation=45)
+        ax.plot(dates, intensities, marker="o", linestyle="-")
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Carbon Intensity (gCO2eq/kWh)")
+        ax.set_title("Carbon Intensity Forecast")
+        ax.tick_params(axis="x", rotation=45)
         self.canvas.draw()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
