@@ -4,6 +4,8 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 ![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
 
+![CarbonQuest icon](https://github.com/seekasra/carbonquest/icon-1.jpg)
+
 
 # CarbonQuest: Visualizing Great Britain's Electrical Carbon Footprint
 
